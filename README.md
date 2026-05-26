@@ -24,15 +24,75 @@ The Poisson distribution is the discrete probability distribution of the number 
 
 ![image](https://user-images.githubusercontent.com/104613195/166251988-d0c53205-6080-4f7b-ae4c-398178586637.png)
 
-# Experiment :
-
-![image](https://user-images.githubusercontent.com/103921593/230282876-f4a5afbf-cac1-4648-a1b0-c78840638a8e.png)
-
 # Program :
+```
+
+import numpy as np
+import math
+import scipy.stats
+
+L = [int(i) for i in input().split()]
+N = len(L)
+M = max(L)
+
+X = []
+f = []
+
+for i in range(M + 1):
+    c = 0
+    for j in range(N):
+        if L[j] == i:
+            c += 1
+    f.append(c)
+    X.append(i)
+
+sf = np.sum(f)
+
+p = []
+for i in range(M + 1):
+    p.append(f[i] / sf)
+
+mean = np.inner(X, p)
+
+p = []
+E = []
+xi = []
+
+print("X   P(X=x)  Obs.Fr  Exp.Fr  xi")
+print("--------------------------------")
+
+for x in range(M + 1):
+    px = math.exp(-mean) * mean**x / math.factorial(x)
+    p.append(px)
+
+    expected = px * sf
+    E.append(expected)
+
+    chi_term = ((f[x] - expected) ** 2) / expected
+    xi.append(chi_term)
+
+    print("%2d  %.3f   %4d   %.2f   %.3f" % (x, px, f[x], expected, chi_term))
+
+print("--------------------------------")
+
+cal_chi2_sq = np.sum(xi)
+print("Calculated Chi-square = %.4f" % cal_chi2_sq)
+
+df = M
+table_chi2 = scipy.stats.chi2.ppf(1 - 0.01, df=df)
+print("Table Chi-square (1%% LOS) = %.4f" % table_chi2)
+
+if cal_chi2_sq < table_chi2:
+    print("Result: Data fits Poisson distribution at 1% LOS")
+else:
+    print("Result: Data does NOT fit Poisson distribution at 1% LOS")
+```
 
  
 
 # Output : 
+<img width="702" height="482" alt="{2B4B368A-D2C5-485C-B26C-6C02DB128B43}" src="https://github.com/user-attachments/assets/e13278fb-db6b-4ae9-a3a9-b874ee05a457" />
+
 
 
 
